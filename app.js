@@ -79,6 +79,37 @@ app.get('/news', function (req, res) {
   })
 })
 
+
+app.get('/stw', function (req, res) {
+  var options = {
+    url: 'https://fortnitecontent-website-prod07.ol.epicgames.com/content/api/pages/fortnite-game',
+    headers: {
+      'Accept-Language': 'en'
+    }
+  }
+  request(options, (err, response, data) => {
+    if (err) {
+      console.log(err)
+    } else {
+      var parsed = JSON.parse(data)
+      res.setHeader('Content-Type', 'application/json')
+      res.status(200).send(JSON.stringify({
+        br: [
+          {
+            image: parsed.savetheworldnews.news.messages[0].image,
+            title: parsed.savetheworldnews.news.messages[0].title,
+            body: parsed.savetheworldnews.news.messages[0].body
+          }, {
+            image: parsed.savetheworldnews.news.messages[1].image,
+            title: parsed.savetheworldnews.news.messages[1].title,
+            body: parsed.savetheworldnews.news.messages[1].body
+          }]
+      }, null, 3))
+      StatsCounter('news')
+    }
+  })
+})
+
 app.get('/news-es', function (req, res) {
   var options = {
     url: 'https://fortnitecontent-website-prod07.ol.epicgames.com/content/api/pages/fortnite-game',
@@ -113,38 +144,8 @@ app.get('/news-es', function (req, res) {
   })
 })
 
-app.get('/news-stw', function (req, res) {
-  var options = {
-    url: 'https://fortnitecontent-website-prod07.ol.epicgames.com/content/api/pages/fortnite-game',
-    headers: {
-      'Accept-Language': 'en'
-    }
-  }
-  request(options, (err, response, data) => {
-    if (err) {
-      console.log(err)
-    } else {
-      var parsed = JSON.parse(data)
-      res.setHeader('Content-Type', 'application/json')
-      res.status(200).send(JSON.stringify({
-        br: [
-          {
-            image: parsed.savetheworldnews.news.messages[0].image,
-            title: parsed.savetheworldnews.news.messages[0].title,
-            body: parsed.savetheworldnews.news.messages[0].body
-          }, {
-            image: parsed.savetheworldnews.news.messages[1].image,
-            title: parsed.savetheworldnews.news.messages[1].title,
-            body: parsed.savetheworldnews.news.messages[1].body
-          },
-          }]
-      }, null, 3))
-      StatsCounter('news')
-    }
-  })
-})
 
-app.get('/messages', function (req, res) {
+app.get('/emergency', function (req, res) {
   var options = {
     url: 'https://fortnitecontent-website-prod07.ol.epicgames.com/content/api/pages/fortnite-game',
     headers: {
@@ -161,13 +162,13 @@ app.get('/messages', function (req, res) {
         br: [
           {
             body: parsed.emergencynotice.news[0].messages
-          },
           }]
       }, null, 3))
       StatsCounter('news')
     }
   })
 })
+
 
 app.get('/status', function (req, res) {
   fortniteAPI.login().then(() => {
